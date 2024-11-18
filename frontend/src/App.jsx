@@ -1,4 +1,4 @@
-import { Header } from './header';
+import { Header } from './Header.jsx';
 
 
 export default function App() {
