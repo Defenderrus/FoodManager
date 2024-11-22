@@ -1,13 +1,16 @@
 .header {
-    height: 56px;
-    margin-bottom: 120px;
+    display: flex;
     background-color: var(--mantine-color-body);
     border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
-  }
-  
-  .inner {
-    height: 56px;
+}
+
+.inner {
+    margin-left: 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
-  }
+}
+
+.title {
+    margin-left: 20px;
+}

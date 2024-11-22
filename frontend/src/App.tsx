@@ -30,46 +30,42 @@ const mockdata = [
 ];
 
 export default function App() {
-  const [opened, { toggle }] = useDisclosure(false);
+  const [opened, { toggle: toggle }] = useDisclosure(true);
   const links = mockdata.map((item) => <LinksGroup {...item} key={item.label} />);
 
   return (
     <MantineProvider>
       <AppShell
-        layout='alt'
         header={{ height: 60 }}
-        footer={{ height: 60 }}
-        navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: !opened } }}
+        navbar={{ width: 300, breakpoint: 0, collapsed: { mobile: !opened, desktop: !opened } }}
         padding="md"
       >
         <AppShell.Header className={headerClasses.header}>
           <Container p="md" className={headerClasses.inner}>
-            <Title order={3}>FoodManager</Title>
-            <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
+            <Burger opened={opened} onClick={toggle} size="sm" />
+            <Title className={headerClasses.title} order={3}>FoodManager</Title>
           </Container>
         </AppShell.Header>
 
         <AppShell.Navbar>
           <nav className={navbarClasses.navbar}>
-            <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />      
-            
+            <div className={navbarClasses.header}>
+              <Title order={4}>Профиль</Title>
+            </div>
+
             <ScrollArea className={navbarClasses.links}>
               <div className={navbarClasses.linksInner}>{links}</div>
             </ScrollArea>
-      
+
             <div className={navbarClasses.footer}>
               <UserButton />
             </div>
           </nav>
         </AppShell.Navbar>
-        
+
         <AppShell.Main>
           Main
         </AppShell.Main>
-
-        <AppShell.Footer p="md">
-          Footer
-        </AppShell.Footer>
       </AppShell>
     </MantineProvider>
   )

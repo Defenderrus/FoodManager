@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { IconCalendarStats, IconChevronRight } from '@tabler/icons-react';
 import { Box, Collapse, Group, Text, ThemeIcon, UnstyledButton } from '@mantine/core';
-import classes from '../css/navbarLinksGroup.module.css';
+import classes from './css/navbarLinksGroup.module.css';
 
 interface LinksGroupProps {
   icon: React.FC<any>;
