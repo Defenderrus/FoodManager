@@ -1,4 +1,5 @@
 import '@mantine/core/styles.css';
+import { Outlet } from 'react-router';
 import {IconAdjustments, IconLock, IconNotes } from '@tabler/icons-react';
 import { MantineProvider, AppShell, Burger, Container, Title, ScrollArea } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
@@ -7,24 +8,32 @@ import { UserButton } from './components/UserButton';
 import headerClasses from './css/header.module.css';
 import navbarClasses from './css/navbar.module.css';
 
+
 const mockdata = [
   {
     label: 'Личный кабинет',
     icon: IconNotes,
     initiallyOpened: true,
     links: [
-      { label: 'Основное', link: '/' },
-      { label: 'Аналитика', link: '/' },
-      { label: 'Графики', link: '/' },
-      { label: 'Другое', link: '/' },
+      { label: 'Основное', link: 'info' },
+      { label: 'Аналитика', link: 'analytics' },
+      { label: 'Графики', link: 'charts' },
+      { label: 'Другое', link: 'other' },
     ],
   },
-  { label: 'Настройки', icon: IconAdjustments },
+  {
+    label: 'Настройки',
+    icon: IconAdjustments,
+    links: [
+      { label: 'Тема', link: 'theme' },
+      { label: 'Язык', link: 'language' },
+    ],
+  },
   {
     label: 'Безопасность',
     icon: IconLock,
     links: [
-      { label: 'Сменить пароль', link: '/' },
+      { label: 'Сменить пароль', link: 'security' },
     ],
   },
 ];
@@ -64,7 +73,7 @@ export default function App() {
         </AppShell.Navbar>
 
         <AppShell.Main>
-          Main
+          <Outlet />
         </AppShell.Main>
       </AppShell>
     </MantineProvider>
