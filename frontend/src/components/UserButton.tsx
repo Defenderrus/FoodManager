@@ -2,6 +2,7 @@ import { IconChevronRight } from '@tabler/icons-react';
 import { Avatar, Group, Text, UnstyledButton } from '@mantine/core';
 import classes from './css/userButton.module.css';
 
+
 export function UserButton() {
   return (
     <UnstyledButton className={classes.user}>
