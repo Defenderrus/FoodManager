@@ -38,12 +38,13 @@ const mockdata = [
   },
 ];
 
+
 export default function App() {
   const [opened, { toggle: toggle }] = useDisclosure(true);
   const links = mockdata.map((item) => <LinksGroup {...item} key={item.label} />);
 
   return (
-    <MantineProvider>
+    <MantineProvider defaultColorScheme="dark">
       <AppShell
         header={{ height: 60 }}
         navbar={{ width: 300, breakpoint: 0, collapsed: { mobile: !opened, desktop: !opened } }}
@@ -51,7 +52,7 @@ export default function App() {
       >
         <AppShell.Header className={headerClasses.header}>
           <Container p="md" className={headerClasses.inner}>
-            <Burger opened={opened} onClick={toggle} size="sm" />
+            <Burger opened={opened} onClick={toggle}/>
             <Title className={headerClasses.title} order={3}>FoodManager</Title>
           </Container>
         </AppShell.Header>

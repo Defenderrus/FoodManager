@@ -1,9 +1,24 @@
 import { Link } from "react-router-dom";
+import { Button, Container, Group, MantineProvider, Text, Title } from '@mantine/core';
+import classes from './css/error.module.css';
 
 
 export default function Error() {
-    return <div className="flex flex-col gap-2">
-        <h3>404 Not Found</h3>
-        <Link to="/account">Home</Link>
-        </div>
+  return (
+    <MantineProvider defaultColorScheme="dark">
+      <Container className={classes.root}>
+        <div className={classes.label}>404</div>
+        <Title className={classes.title}>You have found a secret place.</Title>
+        <Text c="dimmed" size="lg" ta="center" className={classes.description}>
+          Unfortunately, this is only a 404 page. You may have mistyped the address, or the page has
+          been moved to another URL.
+        </Text>
+        <Group justify="center">
+          <Link to="/account">
+            <Button variant="subtle" size="md">Take me back to home page</Button>
+          </Link>
+        </Group>
+      </Container>
+    </MantineProvider>
+  );
 }
