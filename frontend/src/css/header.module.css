@@ -12,5 +12,7 @@
 }
 
 .title {
+    font-weight: 700;
+    font-size: 28px;
     margin-left: 20px;
 }
