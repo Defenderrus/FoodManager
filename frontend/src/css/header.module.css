@@ -1,18 +1,44 @@
 .header {
     display: flex;
+    padding-left: var(--mantine-spacing-md);
+    padding-right: var(--mantine-spacing-md);
     background-color: var(--mantine-color-body);
     border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 }
 
 .inner {
-    margin-left: 0;
+    width: 100%;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
 }
 
 .title {
     font-weight: 700;
     font-size: 28px;
-    margin-left: 20px;
+}
+
+.icon {
+    width: 22px;
+    height: 22px;
+}
+  
+.dark {
+    @mixin dark {
+      display: none;
+    }
+  
+    @mixin light {
+      display: block;
+    }
+}
+  
+.light {
+    @mixin light {
+      display: none;
+    }
+  
+    @mixin dark {
+      display: block;
+    }
 }

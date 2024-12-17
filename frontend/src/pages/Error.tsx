@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
-import { Button, Container, Group, MantineProvider, Text, Title } from '@mantine/core';
+import { Button, Container, Group, Text, Title } from '@mantine/core';
 import classes from './css/error.module.css';
 
 
 export default function Error() {
   return (
-    <MantineProvider defaultColorScheme="dark">
+    <>
       <Container className={classes.root}>
         <div className={classes.label}>404</div>
         <Title className={classes.title}>You have found a secret place.</Title>
@@ -19,6 +19,6 @@ export default function Error() {
           </Link>
         </Group>
       </Container>
-    </MantineProvider>
+    </>
   );
 }

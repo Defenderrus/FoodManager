@@ -1,5 +1,11 @@
+import { Title } from "@mantine/core"
+
+
 export default function Analytics() {
     return (
-        <div>Analytics</div>
+        <>
+            <Title order={3}>Аналитика</Title>
+            <Title order={5}>Расчет суточных потребностей в калориях и макронутриентах</Title>
+        </>
     )
 }
