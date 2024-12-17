@@ -1,7 +1,9 @@
 import '@mantine/core/styles.css';
+import cx from 'clsx';
 import { Outlet } from 'react-router';
-import {IconAdjustments, IconLock, IconNotes } from '@tabler/icons-react';
-import { MantineProvider, AppShell, Burger, Container, Title, ScrollArea } from '@mantine/core';
+import { IconAdjustments, IconLock, IconNotes, IconSun, IconMoon } from '@tabler/icons-react';
+import { AppShell, Burger, Group, Title, ScrollArea,
+  ActionIcon, useMantineColorScheme, useComputedColorScheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { LinksGroup } from './components/NavbarLinksGroup';
 import { UserButton } from './components/UserButton';
@@ -25,7 +27,6 @@ const mockdata = [
     label: 'Настройки',
     icon: IconAdjustments,
     links: [
-      { label: 'Тема', link: 'theme' },
       { label: 'Язык', link: 'language' },
     ],
   },
@@ -42,25 +43,36 @@ const mockdata = [
 export default function App() {
   const [opened, { toggle: toggle }] = useDisclosure(true);
   const links = mockdata.map((item) => <LinksGroup {...item} key={item.label} />);
+  const { setColorScheme } = useMantineColorScheme();
+  const computedColorScheme = useComputedColorScheme('dark', { getInitialValueInEffect: true });
 
   return (
-    <MantineProvider defaultColorScheme="dark">
+    <>
       <AppShell
-        header={{ height: 60 }}
+        header={{ height: 80 }}
         navbar={{ width: 300, breakpoint: 0, collapsed: { mobile: !opened, desktop: !opened } }}
         padding="md"
       >
         <AppShell.Header className={headerClasses.header}>
-          <Container p="md" className={headerClasses.inner}>
+          <Group className={headerClasses.inner}>
             <Burger opened={opened} onClick={toggle}/>
-            <Title className={headerClasses.title} order={3}>FoodManager</Title>
-          </Container>
+            <Title className={headerClasses.title} order={1}>FoodManager</Title>
+            <ActionIcon
+                onClick={() => setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')}
+                variant="default"
+                size="xl"
+                aria-label="Toggle color scheme"
+            >
+              <IconSun className={cx(headerClasses.icon, headerClasses.light)} stroke={1.5} />
+              <IconMoon className={cx(headerClasses.icon, headerClasses.dark)} stroke={1.5} />
+            </ActionIcon>
+          </Group>
         </AppShell.Header>
 
         <AppShell.Navbar>
           <nav className={navbarClasses.navbar}>
             <div className={navbarClasses.header}>
-              <Title order={4}>Профиль</Title>
+              <Title order={3}>Профиль</Title>
             </div>
 
             <ScrollArea className={navbarClasses.links}>
@@ -77,6 +89,6 @@ export default function App() {
           <Outlet />
         </AppShell.Main>
       </AppShell>
-    </MantineProvider>
+    </>
   )
 }

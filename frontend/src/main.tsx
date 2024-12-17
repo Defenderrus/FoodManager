@@ -1,13 +1,13 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router'
+import { MantineProvider } from '@mantine/core'
 import App from './App.tsx'
 import Error from './pages/Error.tsx'
 import Info from './pages/Info.tsx'
 import Analytics from './pages/Analytics.tsx'
 import Charts from './pages/Charts.tsx'
 import Other from './pages/Other.tsx'
-import Theme from './pages/Theme.tsx'
 import Language from './pages/Language.tsx'
 import Security from './pages/Security.tsx'
 
@@ -35,10 +35,6 @@ const router = createBrowserRouter([
         element: <Other />,
       },
       {
-        path: "/account/theme",
-        element: <Theme />,
-      },
-      {
         path: "/account/language",
         element: <Language />,
       },
@@ -52,6 +48,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <MantineProvider defaultColorScheme='dark'>
+      <RouterProvider router={router} />
+    </MantineProvider>
   </StrictMode>
 )

@@ -1,5 +1,10 @@
+import { Title } from "@mantine/core"
+
+
 export default function Charts() {
     return (
-        <div>Charts</div>
+        <>
+            <Title order={3}>Графики</Title>
+        </>
     )
 }
