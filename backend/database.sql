@@ -8,9 +8,9 @@ CREATE TABLE person(
     userweight INTEGER,
     activity INTEGER,
     goal INTEGER,
-    mealpreference JSON,
-    weightHistory JSON,
-    nutritionHirtory JSON,
+    mealpreference VARCHAR(255),
+    weightHistory VARCHAR(255),
+    nutritionHirtory VARCHAR(255),
     lastupdate VARCHAR(255)
 );
 
@@ -28,7 +28,7 @@ CREATE TABLE mealPlan( -- 3
     id SERIAL PRIMARY KEY,
     creationDate VARCHAR(255),
     currentDate VARCHAR(255),
-    meals JSON,
+    meals VARCHAR(255),
     user_id INTEGER,
     FOREIGN KEY (user_id) REFERENCES person (id)
 );

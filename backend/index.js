@@ -18,4 +18,4 @@ app.use('/api', mealPlanRouter)
 // app.use('/api', foodLogRouter)
 // app.use('/api', progressRouter)
 
-app.listen(PORT, () => console.log('server started on port ${port}', [port]))
+app.listen(PORT, () => console.log('server started on port ${port}', [PORT]))
