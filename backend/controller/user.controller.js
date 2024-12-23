@@ -17,7 +17,7 @@ class UserController {
     }
     async updateUser(req, res) {
         const {id, username, email, birthdate, sex, height, userweight, activity, goal, mealpreference, weightHistory, nutritionHistory, lastupdate} = req.body
-        const user = await db.query('UPDATE person SET username = $1, email = $2, birthdate = $3, sex = $4, height = $5, userweight = $6, activity = $7, goal = $8, mealpreference = $9, weightHistory = $10, nutritionHistory = $11, lastupdate = $12 WHERE id = $13 RETURNING *', 
+        const user = await db.query('UPDATE person SET username = $1, email = $2, birthdate = $3, sex = $4, height = $5, userweight = $6, activity = $7, goal = $8, mealpreference = $9, weighthistory = $10, nutritionhirtory = $11, lastupdate = $12 WHERE id = $13 RETURNING *', 
             [username, email, birthdate, sex, height, userweight, activity, goal, mealpreference, weightHistory, nutritionHistory, lastupdate, id])
         res.json(user.rows[0])
     }
