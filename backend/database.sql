@@ -65,8 +65,8 @@ CREATE TABLE ingredient( -- 6
 CREATE TABLE foodLog( -- 7
     id SERIAL PRIMARY KEY,
     currentDate VARCHAR(255),
-    eatenMeals JSON,
-    dailyPFC JSON,
+    eatenMeals VARCHAR(255),
+    dailyPFC VARCHAR(255),
     user_id INTEGER,
     FOREIGN KEY (user_id) REFERENCES person (id)
 );
