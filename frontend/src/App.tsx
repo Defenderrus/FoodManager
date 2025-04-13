@@ -1,3 +1,5 @@
+import '@mantine/core/styles.css';
+import '@mantine/charts/styles.css';
 import cx from 'clsx';
 import { Outlet } from 'react-router';
 import { IconAdjustments, IconLock, IconNotes, IconSun, IconMoon } from '@tabler/icons-react';
@@ -8,8 +10,6 @@ import { LinksGroup } from './components/NavbarLinksGroup';
 import { UserButton } from './components/UserButton';
 import headerClasses from './css/header.module.css';
 import navbarClasses from './css/navbar.module.css';
-import '@mantine/core/styles.css';
-import '@mantine/charts/styles.css';
 
 
 const mockdata = [
@@ -18,24 +18,24 @@ const mockdata = [
     icon: IconNotes,
     initiallyOpened: true,
     links: [
-      { label: 'Основное', link: 'info' },
-      { label: 'Аналитика', link: 'analytics' },
-      { label: 'Графики', link: 'charts' },
-      { label: 'Другое', link: 'other' },
+      { label: 'Основное', link: 'account/info' },
+      { label: 'Аналитика', link: 'account/analytics' },
+      { label: 'Графики', link: 'account/charts' },
+      { label: 'Другое', link: 'account/other' },
     ],
   },
   {
     label: 'Настройки',
     icon: IconAdjustments,
     links: [
-      { label: 'Язык', link: 'language' },
+      { label: 'Язык', link: 'account/language' },
     ],
   },
   {
     label: 'Безопасность',
     icon: IconLock,
     links: [
-      { label: 'Сменить пароль', link: 'security' },
+      { label: 'Сменить пароль', link: 'account/security' },
     ],
   },
 ];

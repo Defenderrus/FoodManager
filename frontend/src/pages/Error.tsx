@@ -14,7 +14,7 @@ export default function Error() {
           been moved to another URL.
         </Text>
         <Group justify="center">
-          <Link to="/account">
+          <Link to="/">
             <Button variant="subtle" size="md">Take me back to home page</Button>
           </Link>
         </Group>
