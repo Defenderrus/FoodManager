@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate, useLocation } from "react-router-dom";
 import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconAt, IconLock } from '@tabler/icons-react';
@@ -11,6 +12,8 @@ interface FormValues {
 }
 
 export default function Auth() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
 
   const form = useForm<FormValues>({
@@ -29,8 +32,11 @@ export default function Auth() {
   const handleSubmit = (values: FormValues) => {
     setLoading(true);
     console.log('Submitted values:', values);
-    // Здесь можно добавить логику авторизации
-    setTimeout(() => setLoading(false), 2000);
+    setTimeout(() => {
+      localStorage.setItem("isAuth", "true");
+      setLoading(false);
+      navigate(location.state?.from?.pathname || "/", { replace: true });
+    }, 1000);
   };
 
   return (
