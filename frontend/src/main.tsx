@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router'
 import { MantineProvider } from '@mantine/core'
 import App from './App.tsx'
 import Error from './pages/Error.tsx'
+import Auth from './pages/Auth.tsx'
 import Info from './pages/Info.tsx'
 import Analytics from './pages/Analytics.tsx'
 import Charts from './pages/Charts.tsx'
@@ -44,6 +45,11 @@ const router = createBrowserRouter([
       },
     ]
   },
+  {
+    path: "/auth",
+    element: <Auth />,
+    errorElement: <Error />
+  }
 ]);
 
 createRoot(document.getElementById('root')!).render(

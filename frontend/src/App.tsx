@@ -1,3 +1,5 @@
+import '@mantine/core/styles.css';
+import '@mantine/charts/styles.css';
 import cx from 'clsx';
 import { Outlet } from 'react-router';
 import { IconAdjustments, IconLock, IconNotes, IconSun, IconMoon } from '@tabler/icons-react';
@@ -8,8 +10,6 @@ import { LinksGroup } from './components/NavbarLinksGroup';
 import { UserButton } from './components/UserButton';
 import headerClasses from './css/header.module.css';
 import navbarClasses from './css/navbar.module.css';
-import '@mantine/core/styles.css';
-import '@mantine/charts/styles.css';
 
 
 const mockdata = [
