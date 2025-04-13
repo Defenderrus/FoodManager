@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "@mantine/form";
 import { Title, Button, TextInput, NumberInput, Select, MultiSelect, Container, Group } from "@mantine/core";
 import "./css/hidden.modules.css";
@@ -17,10 +17,9 @@ interface FormValues {
 }
 
 export default function Info() {
+    const [initialValues, setInitialValues] = useState<FormValues | null>(null);
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
-    const toggleFields = () => {
-        setIsDisabled((prevState) => !prevState);
-    };
+    const toggleFields = () => {setIsDisabled((prevState) => !prevState);};
     const form = useForm<FormValues>({
         mode: "uncontrolled",
         initialValues: {
@@ -35,6 +34,49 @@ export default function Info() {
             allergies: ["Молоко", "Орехи", "Яйца"]
         }
     });
+    useEffect(() => {
+        const fetchProfile = async () => {
+          try {
+            const response = await fetch('http://localhost:5000/api/profile', {
+              headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+              }
+            });
+            if (!response.ok) throw new Error('Не удалось загрузить профиль');
+            const data = await response.json();
+            setInitialValues(data);
+            form.setValues(data);
+          } catch (error) {
+            console.error('Ошибка загрузки профиля:', error);
+          }
+        };
+        fetchProfile();
+    }, []);
+    const handleSave = async () => {
+        try {
+          const values = form.getValues();
+          const response = await fetch('http://localhost:5000/api/profile', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify(values)
+          });
+          if (!response.ok) throw new Error('Не удалось сохранить профиль');
+          const data = await response.json();
+          setInitialValues(data);
+          toggleFields();
+        } catch (error) {
+          console.error('Ошибка сохранения профиля:', error);
+        }
+    };
+    const handleCancel = () => {
+        if (initialValues) {
+          form.setValues(initialValues);
+        }
+        toggleFields();
+    };
     return (
         <Container mt={20} mb={20}>
             <Title order={2} ta={"center"} mb="xl">Личные данные</Title>
@@ -147,8 +189,8 @@ export default function Info() {
             </Container>
             <Group justify="right">
                 <Button onClick={toggleFields} className={isDisabled ? "" : "hidden"} mt="md">Изменить</Button>
-                <Button onClick={toggleFields} className={isDisabled ? "hidden" : ""} mt="md">Сохранить</Button>
-                <Button onClick={toggleFields} className={isDisabled ? "hidden" : ""} mt="md">Отмена</Button>
+                <Button onClick={handleSave} className={isDisabled ? "hidden" : ""} mt="md">Сохранить</Button>
+                <Button onClick={handleCancel} className={isDisabled ? "hidden" : ""} mt="md">Отмена</Button>
             </Group>
         </Container>
     );

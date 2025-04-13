@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "@mantine/form";
 import { Title, Button, NumberInput, MultiSelect, Container, Group } from "@mantine/core";
 import "./css/hidden.modules.css";
@@ -10,29 +10,75 @@ interface formValues {
     dpi: number;
     dfi: number;
     dci: number;
-    brf: any;
-    lch: any;
-    dnr: any;
+    brf: string[];
+    lch: string[];
+    dnr: string[];
 }
 
 export default function Analytics() {
+    const [initialValues, setInitialValues] = useState<formValues | null>(null);
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
-    const toggleFields = () => {
-        setIsDisabled((prevState) => !prevState);
-    };
+    const toggleFields = () => {setIsDisabled((prevState) => !prevState);};
     const form = useForm<formValues>({
-            mode: "uncontrolled",
-            initialValues: {
-                bmr: 102.2,
-                cal: 2281,
-                dpi: 171.1,
-                dfi: 76.0,
-                dci: 228.1,
-                brf: ["Каша", "Блины", "Мёд", "Фрукты", "Сок"],
-                lch: ["Суп", "Мясо", "Картофельное пюре", "Овощной салат", "Ломтики хлеба", "Чай"],
-                dnr: ["Рыба", "Рис", "Чай", "Конфеты"],
+        initialValues: {
+            bmr: 102.2,
+            cal: 2281,
+            dpi: 171.1,
+            dfi: 76.0,
+            dci: 228.1,
+            brf: ["Каша", "Блины", "Мёд", "Фрукты", "Сок"],
+            lch: ["Суп", "Мясо", "Картофельное пюре", "Овощной салат", "Ломтики хлеба", "Чай"],
+            dnr: ["Рыба", "Рис", "Чай", "Конфеты"],
         }
     });
+    useEffect(() => {
+        const fetchAnalytics = async () => {
+          try {
+            const response = await fetch('http://localhost:5000/api/analytics', {
+              headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+              }
+            });
+            if (!response.ok) throw new Error('Не удалось загрузить аналитику');
+            const data = await response.json();
+            setInitialValues(data);
+            form.setValues(data);
+          } catch (error) {
+            console.error('Ошибка загрузки аналитики:', error);
+          }
+        };
+        fetchAnalytics();
+    }, []);
+    const handleSave = async () => {
+        try {
+            const { brf, lch, dnr } = form.values;
+            const response = await fetch('http://localhost:5000/api/analytics', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({ brf, lch, dnr })
+            });
+            if (!response.ok) throw new Error('Не удалось сохранить план питания');
+            const data = await response.json();
+            setInitialValues(prev => ({
+                ...(prev || form.values),
+                brf: data.brf,
+                lch: data.lch,
+                dnr: data.dnr
+            }));
+            toggleFields();
+        } catch (error) {
+          console.error('Ошибка сохранения плана питания:', error);
+        }
+    };
+    const handleCancel = () => {
+        if (initialValues) {
+          form.setValues(initialValues);
+        }
+        toggleFields();
+    };
     return (
         <Container mt={20} mb={20}>
             <Title order={2} ta={"center"} mb="xl">Аналитика</Title>
@@ -129,8 +175,8 @@ export default function Analytics() {
                 </Container>
                 <Group justify="right">
                     <Button onClick={toggleFields} className={isDisabled ? "" : "hidden"} mt="md">Изменить</Button>
-                    <Button onClick={toggleFields} className={isDisabled ? "hidden" : ""} mt="md">Сохранить</Button>
-                    <Button onClick={toggleFields} className={isDisabled ? "hidden" : ""} mt="md">Отмена</Button>
+                    <Button onClick={handleSave} className={isDisabled ? "hidden" : ""} mt="md">Сохранить</Button>
+                    <Button onClick={handleCancel} className={isDisabled ? "hidden" : ""} mt="md">Отмена</Button>
                 </Group>
             </Container>
         </Container>
