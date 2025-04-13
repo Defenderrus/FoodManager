@@ -1,5 +1,6 @@
 import { Container, Title } from "@mantine/core";
 import { AreaChart } from "@mantine/charts";
+import { useState, useEffect } from "react";
 
 
 export default function Charts() {
@@ -79,6 +80,41 @@ export default function Charts() {
           Углеводы: 225.0,
         },
     ];
+    const [weightData, setWeightData] = useState([]);
+    const [caloriesData, setCaloriesData] = useState([]);
+    const [pfcData, setPfcData] = useState([]);
+    useEffect(() => {
+      const fetchChartData = async () => {
+        try {
+          const [weightRes, caloriesRes, pfcRes] = await Promise.all([
+            fetch('/api/charts/weight', {
+              headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+              }
+            }),
+            fetch('/api/charts/calories', {
+              headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+              }
+            }),
+            fetch('/api/charts/pfc', {
+              headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+              }
+            })
+          ]);
+          const weight = await weightRes.json();
+          const calories = await caloriesRes.json();
+          const pfc = await pfcRes.json();
+          setWeightData(weight);
+          setCaloriesData(calories);
+          setPfcData(pfc);
+        } catch (error) {
+          console.error('Error fetching chart data:', error);
+        }
+      };
+      fetchChartData();
+    }, []);
     return (
         <Container mt={20} mb={20}>
             <Title order={2} ta={"center"} mb="lg">Графики</Title>
@@ -86,7 +122,7 @@ export default function Charts() {
             <Container ml={20} mt={20} mb={80}>
                 <AreaChart
                     h={300}
-                    data={weight}
+                    data={weightData.length ? weightData : weight}
                     dataKey="date"
                     series={[
                         { name: 'Вес', color: 'indigo.6' }
@@ -98,7 +134,7 @@ export default function Charts() {
             <Container ml={20} mt={20} mb={80}>
                 <AreaChart
                     h={300}
-                    data={calories}
+                    data={caloriesData.length ? caloriesData : calories}
                     dataKey="date"
                     series={[
                         { name: 'Калории', color: 'teal.6' }
@@ -110,7 +146,7 @@ export default function Charts() {
             <Container ml={20} mt={20} mb={80}>
                 <AreaChart
                     h={300}
-                    data={pfc}
+                    data={pfcData.length ? pfcData : pfc}
                     dataKey="date"
                     series={[
                         { name: 'Белки', color: 'gray.6' },
