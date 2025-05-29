@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useForm } from "@mantine/form";
+import { useUser } from './UserContext';
 import { Title, Button, NumberInput, MultiSelect, Container, Group } from "@mantine/core";
 import "./css/hidden.modules.css";
 
@@ -18,26 +19,26 @@ interface formValues {
 export default function Analytics() {
     const [initialValues, setInitialValues] = useState<formValues | null>(null);
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const toggleFields = () => {setIsDisabled((prevState) => !prevState);};
+    const { user } = useUser();
     const form = useForm<formValues>({
         initialValues: {
-            bmr: 102.2,
-            cal: 2281,
-            dpi: 171.1,
-            dfi: 76.0,
-            dci: 228.1,
-            brf: ["Каша", "Блины", "Мёд", "Фрукты", "Сок"],
-            lch: ["Суп", "Мясо", "Картофельное пюре", "Овощной салат", "Ломтики хлеба", "Чай"],
-            dnr: ["Рыба", "Рис", "Чай", "Конфеты"],
+            bmr: 0,
+            cal: 0,
+            dpi: 0,
+            dfi: 0,
+            dci: 0,
+            brf: [],
+            lch: [],
+            dnr: [],
         }
     });
     useEffect(() => {
         const fetchAnalytics = async () => {
           try {
-            const response = await fetch('http://localhost:5000/api/analytics', {
-              headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-              }
+            const response = await fetch('/analytics', {
+              headers: {'Authorization': `Bearer ${user?.token}`}
             });
             if (!response.ok) throw new Error('Не удалось загрузить аналитику');
             const data = await response.json();
@@ -45,18 +46,19 @@ export default function Analytics() {
             form.setValues(data);
           } catch (error) {
             console.error('Ошибка загрузки аналитики:', error);
+          } finally {
+            setIsLoading(false);
           }
         };
-        fetchAnalytics();
-    }, []);
+        if (user) {fetchAnalytics();}
+    }, [user]);
     const handleSave = async () => {
         try {
             const { brf, lch, dnr } = form.values;
-            const response = await fetch('http://localhost:5000/api/analytics', {
-                method: 'PUT',
+            const response = await fetch('/analytics', {method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${user?.token}`
                 },
                 body: JSON.stringify({ brf, lch, dnr })
             });
@@ -79,6 +81,7 @@ export default function Analytics() {
         }
         toggleFields();
     };
+    if (isLoading) {return <div>Загрузка...</div>;}
     return (
         <Container mt={20} mb={20}>
             <Title order={2} ta={"center"} mb="xl">Аналитика</Title>
