@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconAt, IconLock } from '@tabler/icons-react';
+import { useUser } from './UserContext';
 import classes from './css/auth.module.css';
 
 interface FormValues {
@@ -15,6 +16,7 @@ export default function Auth() {
   const navigate = useNavigate();
   const location = useLocation();
   const [loading, setLoading] = useState(false);
+  const { login } = useUser();
 
   const form = useForm<FormValues>({
     initialValues: {
@@ -29,14 +31,24 @@ export default function Auth() {
     },
   });
 
-  const handleSubmit = (values: FormValues) => {
+  const handleSubmit = async (values: FormValues) => {
     setLoading(true);
-    console.log('Submitted values:', values);
-    setTimeout(() => {
-      localStorage.setItem("isAuth", "true");
+    try {
+      const response = await fetch('/user', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json',},
+        body: JSON.stringify(values),
+      });
+      if (!response.ok) { throw new Error('Неверный email или пароль');}
+      const { token, user } = await response.json();
+      login({ ...user, token });
+      navigate(location.state?.from?.pathname || '/', { replace: true });
+    } catch (error) {
+      console.error('Ошибка входа:', error);
+      form.setErrors({ email: ' ', password: 'Неверный email или пароль' });
+    } finally {
       setLoading(false);
-      navigate(location.state?.from?.pathname || "/", { replace: true });
-    }, 1000);
+    }
   };
 
   return (
