@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useForm } from "@mantine/form";
+import { useUser } from './UserContext';
 import { Title, Button, TextInput, NumberInput, Select, MultiSelect, Container, Group } from "@mantine/core";
 import "./css/hidden.modules.css";
 
@@ -12,35 +13,35 @@ interface FormValues {
     height: number;
     pa_lvl: string;
     purpose: string;
-    preferences: any;
-    allergies: any;
+    preferences: string[];
+    allergies: string[];
 }
 
 export default function Info() {
     const [initialValues, setInitialValues] = useState<FormValues | null>(null);
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const toggleFields = () => {setIsDisabled((prevState) => !prevState);};
+    const { user, logout } = useUser();
     const form = useForm<FormValues>({
         mode: "uncontrolled",
         initialValues: {
-            name: "user123",
-            age: 18,
-            sex: "Мужской",
-            weight: 65,
-            height: 175,
-            pa_lvl: "Умеренный",
-            purpose: "Набор массы",
-            preferences: ["Мясное", "Сладкое"],
-            allergies: ["Молоко", "Орехи", "Яйца"]
+            name: "",
+            age: 0,
+            sex: "",
+            weight: 0,
+            height: 0,
+            pa_lvl: "",
+            purpose: "",
+            preferences: [],
+            allergies: []
         }
     });
     useEffect(() => {
         const fetchProfile = async () => {
           try {
-            const response = await fetch('http://localhost:5000/api/profile', {
-              headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-              }
+            const response = await fetch('/profile', {
+              headers: {'Authorization': `Bearer ${user?.token}`}
             });
             if (!response.ok) throw new Error('Не удалось загрузить профиль');
             const data = await response.json();
@@ -48,18 +49,19 @@ export default function Info() {
             form.setValues(data);
           } catch (error) {
             console.error('Ошибка загрузки профиля:', error);
+          } finally {
+            setIsLoading(false);
           }
         };
-        fetchProfile();
-    }, []);
+        if (user) {fetchProfile();}
+    }, [user]);
     const handleSave = async () => {
         try {
           const values = form.getValues();
-          const response = await fetch('http://localhost:5000/api/profile', {
-            method: 'PUT',
+          const response = await fetch('/profile', {method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
+              'Authorization': `Bearer ${user?.token}`
             },
             body: JSON.stringify(values)
           });
@@ -77,6 +79,7 @@ export default function Info() {
         }
         toggleFields();
     };
+    if (isLoading) {return <div>Загрузка...</div>;}
     return (
         <Container mt={20} mb={20}>
             <Title order={2} ta={"center"} mb="xl">Личные данные</Title>
@@ -191,6 +194,9 @@ export default function Info() {
                 <Button onClick={toggleFields} className={isDisabled ? "" : "hidden"} mt="md">Изменить</Button>
                 <Button onClick={handleSave} className={isDisabled ? "hidden" : ""} mt="md">Сохранить</Button>
                 <Button onClick={handleCancel} className={isDisabled ? "hidden" : ""} mt="md">Отмена</Button>
+            </Group>
+            <Group justify="right">
+                <Button onClick={logout} mt="md">Выйти</Button>
             </Group>
         </Container>
     );

@@ -1,6 +1,7 @@
 import { Container, Title } from "@mantine/core";
 import { AreaChart } from "@mantine/charts";
 import { useState, useEffect } from "react";
+import { useUser } from './UserContext';
 
 
 export default function Charts() {
@@ -83,23 +84,25 @@ export default function Charts() {
     const [weightData, setWeightData] = useState([]);
     const [caloriesData, setCaloriesData] = useState([]);
     const [pfcData, setPfcData] = useState([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const { user } = useUser();
     useEffect(() => {
       const fetchChartData = async () => {
         try {
           const [weightRes, caloriesRes, pfcRes] = await Promise.all([
-            fetch('/api/charts/weight', {
+            fetch('/charts/weight', {
               headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${user?.token}`
               }
             }),
-            fetch('/api/charts/calories', {
+            fetch('/charts/calories', {
               headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${user?.token}`
               }
             }),
-            fetch('/api/charts/pfc', {
+            fetch('/charts/pfc', {
               headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${user?.token}`
               }
             })
           ]);
@@ -111,10 +114,13 @@ export default function Charts() {
           setPfcData(pfc);
         } catch (error) {
           console.error('Error fetching chart data:', error);
+        } finally {
+          setIsLoading(false);
         }
       };
-      fetchChartData();
-    }, []);
+      if (user) {fetchChartData();}
+    }, [user]);
+    if (isLoading) {return <div>Загрузка...</div>;}
     return (
         <Container mt={20} mb={20}>
             <Title order={2} ta={"center"} mb="lg">Графики</Title>
